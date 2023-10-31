@@ -50,7 +50,7 @@ public class NeuralNetwork
         }
     }
 
-    internal void Copy(NeuralNetwork parentNeural)
+    public void Copy(NeuralNetwork parentNeural)
     {
         Mutate(parentNeural, 0f);
     }
