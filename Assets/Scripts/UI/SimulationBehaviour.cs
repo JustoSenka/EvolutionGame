@@ -36,19 +36,23 @@ public class SimulationBehaviour : MonoBehaviour
 
     void Start()
     {
-        _cts = new CancellationTokenSource();
-
         Simulation = new Simulation(settings);
 
         SpawnAll();
 
         if (runAsynchronous)
-            Simulation.Start(_cts.Token);
+            StartAsynchronousSimulation();
     }
 
     private void OnDisable()
     {
         _cts.Cancel();
+    }
+
+    private void StartAsynchronousSimulation()
+    {
+        _cts = new CancellationTokenSource();
+        Simulation.Start(_cts.Token);
     }
 
     void FixedUpdate()
@@ -58,16 +62,22 @@ public class SimulationBehaviour : MonoBehaviour
         if (Simulation == null)
             return;
 
+        specimen[1].GetComponent<MeshRenderer>().material.color = Color.blue;
+        specimen[10].GetComponent<MeshRenderer>().material.color = Color.gray;
+
         if (!runAsynchronous)
             Simulation.CustomUpdate();
+    }
 
+    private void Update()
+    {
         for (int i = 0; i < Simulation.Specimen.Length; i++)
             specimen[i].transform.position = Simulation.Specimen[i].Position;
     }
 
     private void SpawnAll()
     {
-        food = Spawn("Food", Simulation.Maps[0].Food.Select(f => f.Position),foodParent, foodPrefab, 0.25f).ToList();
+        food = Spawn("Food", Simulation.Maps[0].Food.Select(f => f.Position), foodParent, foodPrefab, 0.25f).ToList();
         specimen = Spawn("Specimen", Simulation.Specimen.Select(s => s.Position), specimenParent, specimenPrefab, 0.5f).ToList();
     }
 

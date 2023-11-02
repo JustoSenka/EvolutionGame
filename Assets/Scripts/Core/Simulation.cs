@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections;
+﻿using Newtonsoft.Json;
+using System;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -24,6 +24,8 @@ public class SimulationSettings
     public Rect spawnArea = new(-100, -100, 200, 200);
     public int randomSeed = 5;
 
+    public int delayBetweekFramesMs = 0;
+
     public SpecimenSettings specimenSettings;
 }
 
@@ -35,6 +37,7 @@ public partial class Simulation
     public Specimen[] BottomSpecimen { get; private set; }
     public int Frame { get; private set; } = 0;
     public int Generation { get; private set; } = 0;
+    public float MaxScore { get; private set; } = 0;
 
     private readonly SimulationSettings _settings;
     private readonly Random _random;
@@ -58,12 +61,21 @@ public partial class Simulation
 
     public void Start(CancellationToken token)
     {
-        Task.Run(() =>
+        Task.Run(async () =>
         {
             while (!token.IsCancellationRequested)
+            {
                 CustomUpdate();
 
-        }, token);
+                if (_settings.delayBetweekFramesMs != 0)
+                    await Task.Delay(_settings.delayBetweekFramesMs);
+            }
+
+        }, token).ContinueWith(task =>
+        {
+            if (task.IsFaulted)
+                Debug.LogError(task.Exception);
+        });
     }
 
     public void CustomUpdate()
@@ -76,8 +88,13 @@ public partial class Simulation
             return;
         }
 
-        for (int i = 0; i < Specimen.Length; i++)
-            Specimen[i].CustomUpdate();
+        Parallel.For(0, Specimen.Length, (i) =>
+        {
+            if (i == 10)
+                Specimen[i].CustomUpdateSimple(); // Hand written AI to go for closest food
+            else
+                Specimen[i].CustomUpdate();
+        });
     }
 
     private void ResetSimulation()
@@ -129,14 +146,27 @@ public partial class Simulation
     {
         Debug.Log("Saving top Specimen");
 
-        var json = JsonUtility.ToJson(TopSpecimen);
-        var currentTime = DateTime.Now.ToString("yyyy.MM.dd_HH:mm:ss.ff");
-        var filePath = $"Neurals/Neural_{currentTime}_{Generation}.json";
-        if (!Directory.Exists("Neurals"))
-            Directory.CreateDirectory("Neurals");
+        var topSingleSpecimen = TopSpecimen.Where(s => s.Id != 10).First();
+        if (topSingleSpecimen.Score <= MaxScore)
+            return;
 
-        // File.WriteAllText("Neurals/Latest.json", json);
-        // File.WriteAllText(filePath, json);
+        MaxScore = topSingleSpecimen.Score;
+        var json = JsonConvert.SerializeObject(topSingleSpecimen.Neural, Formatting.Indented);
+
+        Task.Run(() =>
+        {
+            var currentTime = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss_ff");
+
+            var filePath = $"Neurals/Neural_{currentTime}_{Generation}.json";
+            if (!Directory.Exists("Neurals"))
+                Directory.CreateDirectory("Neurals");
+
+            File.WriteAllText(filePath, json);
+        }).ContinueWith(task =>
+        {
+            if (task.IsFaulted)
+                Debug.LogError(task.Exception);
+        });
     }
 
     private void ResetSpecimen()
@@ -158,14 +188,9 @@ public partial class Simulation
             {
                 newSpecimen.InitializeRandom(_random.Next());
             }
-            else if (i % 2 == 0)
-            {
-                newSpecimen.Breed(TopSpecimen[i % _settings.topSpecimenToKeep].Neural, TopSpecimen[(2 * i + i % 2 + i % 3) % _settings.topSpecimenToKeep].Neural);
-                newSpecimen.Mutate();
-            }
             else 
             {
-                newSpecimen.Breed(TopSpecimen[i % _settings.topSpecimenToKeep].Neural, BottomSpecimen[(2 * i + i % 2 + i % 3) % _settings.bottomSpecimenToKeep].Neural);
+                newSpecimen.Breed(TopSpecimen[i % _settings.topSpecimenToKeep].Neural, TopSpecimen[(2 * i + i % 2 + i % 3) % _settings.topSpecimenToKeep].Neural);
                 newSpecimen.Mutate();
             }
 

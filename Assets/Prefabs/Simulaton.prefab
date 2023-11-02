@@ -45,25 +45,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   settings:
-    specimenCount: 100
+    specimenCount: 500
     foodCount: 80
-    topSpecimenToKeep: 20
-    bottomSpecimenToKeep: 10
+    topSpecimenToKeep: 100
+    bottomSpecimenToKeep: 20
     newSpecimenToAdd: 20
-    generationLengthFrames: 300
+    generationLengthFrames: 600
     spawnArea:
       serializedVersion: 2
       x: -20
       y: -20
       width: 40
       height: 40
-    randomSeed: 8
+    randomSeed: 7
+    delayBetweekFramesMs: 0
     specimenSettings:
       moveSpeed: 0.2
       sightRadius: 20
-      consumeRadius: 2
-      mutationFactor: 0.05
-      neuralNetworkLayerSizes: 02000000050000000200000001000000
+      consumeRadius: 0.3
+      mutationFactor: 0.15
+      neuralNetworkLayerSizes: 020000000200000002000000
   runAsynchronous: 1
   fixedUpdateTimestep: 30
   specimenPrefab: {fileID: 3234025084321777068, guid: ce713572664c13d4c844c43e573f2df6, type: 3}

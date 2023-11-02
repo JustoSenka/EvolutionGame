@@ -723,20 +723,28 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1031959118}
     - target: {fileID: 8470681427364082348, guid: 9ea2008163fa4814dad77211fa3354e3, type: 3}
-      propertyPath: runAsynchronous
-      value: 1
+      propertyPath: settings.foodCount
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 8470681427364082348, guid: 9ea2008163fa4814dad77211fa3354e3, type: 3}
-      propertyPath: settings.generationLengthFrames
-      value: 1000
+      propertyPath: settings.specimenCount
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 8470681427364082348, guid: 9ea2008163fa4814dad77211fa3354e3, type: 3}
-      propertyPath: settings.specimenSettings.consumeRadius
-      value: 0.3
+      propertyPath: settings.newSpecimenToAdd
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8470681427364082348, guid: 9ea2008163fa4814dad77211fa3354e3, type: 3}
+      propertyPath: settings.topSpecimenToKeep
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 8470681427364082348, guid: 9ea2008163fa4814dad77211fa3354e3, type: 3}
+      propertyPath: settings.bottomSpecimenToKeep
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8470681427364082348, guid: 9ea2008163fa4814dad77211fa3354e3, type: 3}
       propertyPath: settings.specimenSettings.neuralNetworkLayerSizes.Array.size
-      value: 4
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8470681427364082348, guid: 9ea2008163fa4814dad77211fa3354e3, type: 3}
       propertyPath: settings.specimenSettings.neuralNetworkLayerSizes.Array.data[0]
@@ -744,11 +752,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8470681427364082348, guid: 9ea2008163fa4814dad77211fa3354e3, type: 3}
       propertyPath: settings.specimenSettings.neuralNetworkLayerSizes.Array.data[1]
-      value: 5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8470681427364082348, guid: 9ea2008163fa4814dad77211fa3354e3, type: 3}
       propertyPath: settings.specimenSettings.neuralNetworkLayerSizes.Array.data[2]
-      value: 2
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8470681427364082348, guid: 9ea2008163fa4814dad77211fa3354e3, type: 3}
+      propertyPath: settings.specimenSettings.neuralNetworkLayerSizes.Array.data[3]
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8470681427364082348, guid: 9ea2008163fa4814dad77211fa3354e3, type: 3}
+      propertyPath: settings.specimenSettings.neuralNetworkLayerSizes.Array.data[4]
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8470681427364082349, guid: 9ea2008163fa4814dad77211fa3354e3, type: 3}
       propertyPath: m_RootOrder

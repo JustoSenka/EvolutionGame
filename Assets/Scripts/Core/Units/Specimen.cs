@@ -11,13 +11,14 @@ public class SpecimenSettings
 {
     public float moveSpeed = 0.2f;
     public float sightRadius = 20;
-    public float consumeRadius = 2;
+    public float consumeRadius = 0.2f;
 
     public float mutationFactor = 0.05f;
 
     public int[] neuralNetworkLayerSizes = new int[] { 2, 18, 9, 1 };
 }
 
+[Serializable]
 public struct Specimen : IUnit
 {
     public bool Valid { get; private set; }
@@ -66,6 +67,40 @@ public struct Specimen : IUnit
 
     public void CustomUpdate()
     {
+        var input = Neural.GetInputArray();
+
+        var specimenPosition = Position;
+
+        var closestFood = _map.Food
+            .Select((food, id) => (food, id))
+            .Where(t => t.food.Valid)
+            .OrderBy(t => Vector3.SqrMagnitude(t.food.Position - specimenPosition))
+            .Take(input.Length);
+
+        (Food food, int i) firstFood = default;
+        int index = 0;
+        foreach(var (food, id) in closestFood)
+        {
+            if (index == 0)
+                firstFood = (food, id);
+
+            input[index++] = Vector3.SignedAngle(food.Position - specimenPosition, Vector3.right, Vector3.up) / 360f;
+        }
+
+        var outputs = Neural.FeedForward();
+
+        var targetAngle = (float) outputs[0] * 360f;
+
+        var rotation = Quaternion.AngleAxis(targetAngle, Vector3.down);
+        var direction = rotation * Vector3.right;
+
+        Position += direction * _settings.moveSpeed;
+
+        ConsumeFood(firstFood);
+    }
+
+    public void CustomUpdateSimple()
+    {
         var specimenPosition = Position;
 
         var closestFood = _map.Food
@@ -76,27 +111,17 @@ public struct Specimen : IUnit
 
         var targetPosition = closestFood.food.Position - specimenPosition;
 
-        var input = Neural.GetInputArray();
-
-        // input[0] = specimenPosition.x - closestFood.food.Position.x;
-        // input[1] = specimenPosition.z - closestFood.food.Position.z;
-
-        var angle = Vector3.SignedAngle(targetPosition, Vector3.right, Vector3.up) / 360f;
-
-        input[0] = angle;
-
-        var outputs = Neural.FeedForward();
-
-        var directionOutput = Id == 1 ? angle : outputs[0];
-
-        var rotation = Quaternion.AngleAxis((float)(360 * directionOutput), Vector3.down);
+        var angle = Vector3.SignedAngle(targetPosition, Vector3.right, Vector3.up);
+        var rotation = Quaternion.AngleAxis(angle, Vector3.down);
         var direction = rotation * Vector3.right;
-        /*
-        if (Id == 1)
-            Debug.Log($"ClosestFood: {targetPosition}, Angle: {directionOutput * 360f}, Direction: {direction}");
-        */
+
         Position += direction * _settings.moveSpeed;
 
+        ConsumeFood(closestFood);
+    }
+
+    private void ConsumeFood((Food food, int i) closestFood)
+    {
         if (Vector3.Distance(closestFood.food.Position, Position) <= _settings.consumeRadius)
         {
             _map.Food[closestFood.i].Destroy();
