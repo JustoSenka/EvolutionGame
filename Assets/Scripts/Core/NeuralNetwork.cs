@@ -1,20 +1,30 @@
 using System;
+using UnityEngine;
 using Random = System.Random;
 
 public class NeuralNetwork
 {
-    private int[] layerSizes;
-    private double[][] activations;
-    private double[][][] weights;
-    private double[][] biases;
-    private Func<double, double>[] activationFunctions;
+    public string Id { get; private set; }
 
-    private Random _random;
+    public int[] layerSizes;
+    public double[][][] weights;
+    public double[][] biases;
+
+    [NonSerialized]
+    private double[][] _activations;
+
+    [NonSerialized]
+    private Func<double, double>[] _activationFunctions;
+
+    [NonSerialized]
+    private readonly Random _random;
 
     public NeuralNetwork(int[] layerSizes, Func<double, double>[] activationFunctions, int randomSeed)
     {
+        Id = Guid.NewGuid().ToString();
+
         this.layerSizes = layerSizes;
-        this.activationFunctions = activationFunctions;
+        this._activationFunctions = activationFunctions;
 
         _random = new Random(randomSeed);
 
@@ -23,13 +33,13 @@ public class NeuralNetwork
 
     private void InitializeParameters()
     {
-        activations = new double[layerSizes.Length][];
+        _activations = new double[layerSizes.Length][];
         weights = new double[layerSizes.Length - 1][][];
         biases = new double[layerSizes.Length - 1][];
 
         for (int i = 0; i < layerSizes.Length; i++)
         {
-            activations[i] = new double[layerSizes[i]];
+            _activations[i] = new double[layerSizes[i]];
 
             if (i > 0)
             {
@@ -39,11 +49,11 @@ public class NeuralNetwork
                 for (int j = 0; j < layerSizes[i]; j++)
                 {
                     weights[i - 1][j] = new double[layerSizes[i - 1]];
-                    biases[i - 1][j] = 0.0; // Initialize biases to zero
+                    biases[i - 1][j] = _random.NextDouble() * 2 - 1f; // Initialize biases to zero
 
                     for (int k = 0; k < layerSizes[i - 1]; k++)
                     {
-                        weights[i - 1][j][k] = _random.NextDouble() - 0.5; // Initialize weights with small random values
+                        weights[i - 1][j][k] = _random.NextDouble() * 2 - 1f; // Initialize weights with small random values
                     }
                 }
             }
@@ -52,54 +62,87 @@ public class NeuralNetwork
 
     public void Copy(NeuralNetwork parentNeural)
     {
-        Mutate(parentNeural, 0f);
-    }
+        Id = parentNeural.Id;
 
-    public void Mutate(NeuralNetwork parentNeural, float mutationFactor)
-    {
         for (int i = 0; i < layerSizes.Length; i++)
         {
             if (i > 0)
             {
                 for (int j = 0; j < layerSizes[i]; j++)
                 {
-                    biases[i - 1][j] = parentNeural.biases[i - 1][j] + (_random.NextDouble() - 0.5f) * mutationFactor;
+                    biases[i - 1][j] = parentNeural.biases[i - 1][j];
 
                     for (int k = 0; k < layerSizes[i - 1]; k++)
                     {
-                        weights[i - 1][j][k] = parentNeural.weights[i - 1][j][k] + (_random.NextDouble() - 0.5f) * mutationFactor;
+                        weights[i - 1][j][k] = parentNeural.weights[i - 1][j][k];
                     }
                 }
             }
         }
     }
 
-    public double Sigmoid(double x)
+    public void Mutate(float mutationFactor)
     {
-        return 1.0 / (1.0 + Math.Exp(-x));
+        Id = Guid.NewGuid().ToString();
+
+        for (int i = 0; i < layerSizes.Length; i++)
+        {
+            if (i > 0)
+            {
+                for (int j = 0; j < layerSizes[i]; j++)
+                {
+                    biases[i - 1][j] = biases[i - 1][j] + (_random.NextDouble() - 0.5f) * mutationFactor;
+
+                    for (int k = 0; k < layerSizes[i - 1]; k++)
+                    {
+                        weights[i - 1][j][k] = Mathf.Clamp((float)(weights[i - 1][j][k] + (_random.NextDouble() - 0.5f) * mutationFactor), -1, 1);
+                    }
+                }
+            }
+        }
     }
+
+    public void Breed(NeuralNetwork parentX, NeuralNetwork parentY)
+    {
+        Id = Guid.NewGuid().ToString();
+
+        for (int i = 0; i < layerSizes.Length; i++)
+        {
+            if (i > 0)
+            {
+                for (int j = 0; j < layerSizes[i]; j++)
+                {
+                    biases[i - 1][j] = (parentX.biases[i - 1][j] + parentY.biases[i - 1][j]) / 2;
+
+                    for (int k = 0; k < layerSizes[i - 1]; k++)
+                    {
+                        weights[i - 1][j][k] = (parentX.weights[i - 1][j][k] + parentY.weights[i - 1][j][k]) / 2;
+                    }
+                }
+            }
+        }
+    }
+
+    public double Sigmoid(double x) => 1.0 / (1.0 + Math.Exp(-x));
+    public double Tanh(double x) => Math.Tanh(x);
+    public double ReLU(double x) => Math.Max(0, x);
 
     private double ApplyActivationFunction(double x, int layer)
     {
-        return x;
-        // return Sigmoid(x);
+        if (layer == layerSizes.Length - 1)
+            return x;
+        
+        return ReLU(x);
         // return activationFunctions[layer](x);
     }
 
-    public double[] FeedForward(double[] input)
+    public double[] GetInputArray()
     {
-        // Implement the forward pass of the neural network.
-        // Apply activation functions for each layer.
-        // Store intermediate activations in the 'activations' array.
+        return _activations[0];
+    }
 
-        if (input.Length != layerSizes[0])
-        {
-            throw new ArgumentException("Input size does not match the input layer size.");
-        }
-
-        // Set input as the first layer's activations
-        activations[0] = input;
-
+    public double[] FeedForward()
+    {
         // Perform feedforward for each layer
         for (int layer = 1; layer < layerSizes.Length; layer++)
         {
@@ -108,15 +151,15 @@ public class NeuralNetwork
                 double weightedSum = 0.0;
                 for (int prevNeuron = 0; prevNeuron < layerSizes[layer - 1]; prevNeuron++)
                 {
-                    weightedSum += weights[layer - 1][neuron][prevNeuron] * activations[layer - 1][prevNeuron];
+                    weightedSum += weights[layer - 1][neuron][prevNeuron] * _activations[layer - 1][prevNeuron];
                 }
                 weightedSum += biases[layer - 1][neuron];
 
-                activations[layer][neuron] = ApplyActivationFunction(weightedSum, layer);
+                _activations[layer][neuron] = ApplyActivationFunction(weightedSum, layer);
             }
         }
 
-        return activations[layerSizes.Length - 1]; // Return the output layer's activations
+        return _activations[layerSizes.Length - 1]; // Return the output layer's activations
     }
 
     public void Train(double[] input, double[] target, double learningRate)

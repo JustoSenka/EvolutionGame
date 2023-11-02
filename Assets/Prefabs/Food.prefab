@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 4554908218423648771}
   - component: {fileID: 7863633602282234380}
   - component: {fileID: 2208938631688042006}
-  - component: {fileID: 4397326956029902220}
   - component: {fileID: 1297511285545715007}
+  - component: {fileID: 5498186782110520497}
   m_Layer: 6
   m_Name: Food
   m_TagString: Untagged
@@ -99,18 +99,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4397326956029902220
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7328947909142033684}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ca5a1f83459b33f4d81e71f06270af2e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!54 &1297511285545715007
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -127,3 +115,15 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &5498186782110520497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7328947909142033684}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6222b4d931856845992b703ab948730, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

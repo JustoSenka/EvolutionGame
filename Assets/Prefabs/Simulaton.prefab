@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &8263585630452651408
+--- !u!1 &8470681427364082355
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,54 +8,65 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8263585630452651406}
-  - component: {fileID: 8263585630452651407}
+  - component: {fileID: 8470681427364082349}
+  - component: {fileID: 8470681427364082348}
   m_Layer: 0
-  m_Name: Game
+  m_Name: Simulaton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &8263585630452651406
+--- !u!4 &8470681427364082349
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8263585630452651408}
+  m_GameObject: {fileID: 8470681427364082355}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalPosition: {x: -88.34284, y: -214.38855, z: 210.45834}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8263585630452651407
+--- !u!114 &8470681427364082348
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8263585630452651408}
+  m_GameObject: {fileID: 8470681427364082355}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 24d45038154ea694d9b4ae5e32c1a0d5, type: 3}
+  m_Script: {fileID: 11500000, guid: 0016d912e7a900648aed18b0d74c40b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  settings:
+    specimenCount: 100
+    foodCount: 80
+    topSpecimenToKeep: 20
+    bottomSpecimenToKeep: 10
+    newSpecimenToAdd: 20
+    generationLengthFrames: 300
+    spawnArea:
+      serializedVersion: 2
+      x: -20
+      y: -20
+      width: 40
+      height: 40
+    randomSeed: 8
+    specimenSettings:
+      moveSpeed: 0.2
+      sightRadius: 20
+      consumeRadius: 2
+      mutationFactor: 0.05
+      neuralNetworkLayerSizes: 02000000050000000200000001000000
+  runAsynchronous: 1
+  fixedUpdateTimestep: 30
   specimenPrefab: {fileID: 3234025084321777068, guid: ce713572664c13d4c844c43e573f2df6, type: 3}
   foodPrefab: {fileID: 7328947909142033684, guid: 810d1a64859333a4699f4f22f92ea4dd, type: 3}
   specimenParent: {fileID: 0}
   foodParent: {fileID: 0}
-  specimenCount: 30
-  foodCount: 200
-  spawnArea:
-    serializedVersion: 2
-    x: -50
-    y: -50
-    width: 100
-    height: 100
-  randomSeed: 5
-  frame: 0
-  generation: 0
