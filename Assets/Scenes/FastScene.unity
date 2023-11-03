@@ -724,7 +724,7 @@ PrefabInstance:
       objectReference: {fileID: 1031959118}
     - target: {fileID: 8470681427364082348, guid: 9ea2008163fa4814dad77211fa3354e3, type: 3}
       propertyPath: settings.foodCount
-      value: 30
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 8470681427364082348, guid: 9ea2008163fa4814dad77211fa3354e3, type: 3}
       propertyPath: settings.specimenCount
@@ -743,12 +743,16 @@ PrefabInstance:
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8470681427364082348, guid: 9ea2008163fa4814dad77211fa3354e3, type: 3}
+      propertyPath: settings.generationLengthFrames
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 8470681427364082348, guid: 9ea2008163fa4814dad77211fa3354e3, type: 3}
       propertyPath: settings.specimenSettings.neuralNetworkLayerSizes.Array.size
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8470681427364082348, guid: 9ea2008163fa4814dad77211fa3354e3, type: 3}
       propertyPath: settings.specimenSettings.neuralNetworkLayerSizes.Array.data[0]
-      value: 1
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8470681427364082348, guid: 9ea2008163fa4814dad77211fa3354e3, type: 3}
       propertyPath: settings.specimenSettings.neuralNetworkLayerSizes.Array.data[1]
