@@ -41,10 +41,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 3658281250999282644}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 033c256b501bcc04b93a5c28060033a6, type: 3}
+  m_Script: {fileID: 11500000, guid: ee0bf33dc684c4d4c8a41c1f9cc34dcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textAsset: {fileID: 4900000, guid: 09cd0539241c484498f4efdf09f1f0f3, type: 3}
+  textAsset: {fileID: 0}
   neuronPrefab: {fileID: 8961311018829754885, guid: b542b7136de5ba7419e83a9c81aa6b11, type: 3}
   weightPrefab: {fileID: 2921876244363054989, guid: 9c8a00d3cc6448a4bb0286a613d1c38a, type: 3}
-  textPrefab: {fileID: 0}
+  textPrefab: {fileID: 9069908136988616063, guid: 558d83eca835c154ab14bc80aa130b3a, type: 3}

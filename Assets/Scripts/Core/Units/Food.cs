@@ -1,25 +1,9 @@
-﻿using UnityEngine;
+﻿using System;
 
-public struct Food : IUnit
+[Serializable]
+public class Food : Unit
 {
-    public bool Valid { get; private set; }
-    public int Id { get; private set; }
-    public Vector3 Position { get; set; }
+    public float quantity = 10;
 
-    public Food(int id, Vector3 position)
-    {
-        Valid = true;
-        Id = id;
-        Position = position;
-    }
-
-    public void Destroy()
-    {
-        Valid = false;
-    }
-
-    public void Reactivate()
-    {
-        Valid = true;
-    }
+    public Food(bool addToDatabase) : base(addToDatabase) { }
 }

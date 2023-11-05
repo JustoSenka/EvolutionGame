@@ -460,6 +460,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3658281250999282647, guid: 42d0646acb20d4b4c96d3de5d9b03b49, type: 3}
+      propertyPath: textAsset
+      value: 
+      objectReference: {fileID: 4900000, guid: 09cd0539241c484498f4efdf09f1f0f3, type: 3}
+    - target: {fileID: 3658281250999282647, guid: 42d0646acb20d4b4c96d3de5d9b03b49, type: 3}
       propertyPath: textPrefab
       value: 
       objectReference: {fileID: 346434593}

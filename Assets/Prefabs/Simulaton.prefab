@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8470681427364082349}
-  - component: {fileID: 8470681427364082348}
+  - component: {fileID: 8470681426129161886}
   m_Layer: 0
   m_Name: Simulaton
   m_TagString: Untagged
@@ -32,7 +32,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8470681427364082348
+--- !u!114 &8470681426129161886
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,33 +41,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 8470681427364082355}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0016d912e7a900648aed18b0d74c40b9, type: 3}
+  m_Script: {fileID: 11500000, guid: e7bd8eaf0cfa0b442998233a77163710, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   settings:
-    specimenCount: 500
-    foodCount: 80
-    topSpecimenToKeep: 100
-    bottomSpecimenToKeep: 20
-    newSpecimenToAdd: 20
-    generationLengthFrames: 600
+    initialSpecimenCount: 100
+    initialFoodCount: 50
+    initialSilicaCount: 50
     spawnArea:
       serializedVersion: 2
-      x: -20
-      y: -20
-      width: 40
-      height: 40
-    randomSeed: 7
+      x: -100
+      y: -100
+      width: 200
+      height: 200
+    randomSeed: 5
     delayBetweekFramesMs: 0
-    specimenSettings:
-      moveSpeed: 0.2
-      sightRadius: 20
-      consumeRadius: 0.3
-      mutationFactor: 0.15
-      neuralNetworkLayerSizes: 020000000200000002000000
-  runAsynchronous: 1
+  runAsynchronous: 0
   fixedUpdateTimestep: 30
-  specimenPrefab: {fileID: 3234025084321777068, guid: ce713572664c13d4c844c43e573f2df6, type: 3}
-  foodPrefab: {fileID: 7328947909142033684, guid: 810d1a64859333a4699f4f22f92ea4dd, type: 3}
-  specimenParent: {fileID: 0}
-  foodParent: {fileID: 0}
