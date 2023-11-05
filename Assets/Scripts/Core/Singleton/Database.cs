@@ -20,7 +20,7 @@ public class ObjectDatabase<T> : IEnumerable<T>, IEnumerable where T : Unit
             if (Objects.ContainsKey(obj.Id))
                 return false;
 
-            Debug.Log($"Adding {obj.GetType().Name}: {obj.Id}");
+            // Debug.Log($"Adding {obj.GetType().Name}: {obj.Id}");
             _objects[obj.Id] = obj;
             Added?.Invoke(obj);
 
@@ -35,7 +35,7 @@ public class ObjectDatabase<T> : IEnumerable<T>, IEnumerable where T : Unit
             if (!Objects.ContainsKey(obj.Id))
                 return false;
 
-            Debug.Log($"Removing {obj.GetType().Name}: {obj.Id}");
+            // Debug.Log($"Removing {obj.GetType().Name}: {obj.Id}");
             _objects.Remove(obj.Id);
             Removed?.Invoke(obj);
 
@@ -60,7 +60,7 @@ public class Database
     public event Action<Unit> UnitAdded;
     public event Action<Unit> UnitRemoved;
 
-    public Database()
+    private Database()
     {
         Food.Added += (o) => UnitAdded?.Invoke(o);
         Trees.Added += (o) => UnitAdded?.Invoke(o);

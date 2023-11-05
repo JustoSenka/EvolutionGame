@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -27,7 +28,9 @@ public class Simulation
     private SimulationSettings _settings;
     private Random _random;
 
-    public Simulation() { }
+    public ConcurrentQueue<Action> ActionsAfterUpdates = new();
+
+    private Simulation() { }
 
     public void StartAsync(SimulationSettings simulationSettings, CancellationToken token)
     {
@@ -82,6 +85,11 @@ public class Simulation
         {
             tree.CustomUpdate(Frame);
         });
+
+        foreach (var ac in ActionsAfterUpdates)
+            ac.Invoke();
+
+        ActionsAfterUpdates.Clear();
 
         SaveTopSpecimen();
     }

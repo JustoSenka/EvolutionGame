@@ -54,6 +54,7 @@ public class DatabaseBehaviour : MonoBehaviour
 
     private void Update()
     {
+        // TODO: should check if the object is not consumed yet
         while (_unitsToCreate.TryDequeue(out Unit unit))
         {
             var unitType = unit.GetType();

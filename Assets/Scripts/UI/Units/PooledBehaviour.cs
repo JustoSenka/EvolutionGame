@@ -13,7 +13,7 @@ public abstract class PooledBehaviour : MonoBehaviour
     public PoolItem PoolItem { get; private set; }
     public abstract Type UnderlyingUnitType { get; }
 
-    public bool ShouldRemoveSelf = false;
+    protected bool ShouldRemoveSelf = false;
 
     public virtual void LinkWithBackendObject(Guid id, PoolItem poolItem = null)
     {

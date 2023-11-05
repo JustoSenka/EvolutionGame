@@ -10,7 +10,10 @@ public class FoodBehaviour : GenericPooledBehaviour<Food>
 
         lock (Database.Instance.Food.Objects)
         {
-            Object = Database.Instance.Food.Objects[Id];
+            if (Database.Instance.Food.Objects.ContainsKey(Id))
+                Object = Database.Instance.Food.Objects[Id];
+            else
+                ShouldRemoveSelf = true;
         }
     }
 }

@@ -5,7 +5,7 @@ public class Tree : Unit
 {
     public float spawnRadius = 30f;
 
-    public int spawnFrequency = 30;
+    public int spawnFrequency = 150;
 
     private long nextSpawn;
     private Random _random;

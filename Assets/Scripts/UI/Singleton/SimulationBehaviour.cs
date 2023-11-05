@@ -13,19 +13,16 @@ public class SimulationBehaviour : MonoBehaviour
 
     private CancellationTokenSource _cts;
 
-    private Simulation _simulation;
     void Start()
     {
-        _simulation = new Simulation();
-
         if (runAsynchronous)
         {
             _cts = new CancellationTokenSource();
-            _simulation.StartAsync(settings, _cts.Token);
+            Simulation.Instance.StartAsync(settings, _cts.Token);
         }
         else
         {
-            _simulation.StartSync(settings);
+            Simulation.Instance.StartSync(settings);
         }
     }
     private void OnDisable()
@@ -37,10 +34,7 @@ public class SimulationBehaviour : MonoBehaviour
     {
         Time.fixedDeltaTime = fixedUpdateTimestep / 1000;
 
-        if (_simulation == null)
-            return;
-
         if (!runAsynchronous)
-            _simulation.CustomUpdate();
+            Simulation.Instance.CustomUpdate();
     }
 }
