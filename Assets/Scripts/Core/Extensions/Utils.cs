@@ -7,7 +7,7 @@ using Random = System.Random;
 
 public static class Utils
 {
-    public static void SaveNeuralNetworkToFileAsync(NeuralNetwork neural)
+    public static void SaveNeuralNetworkToFileAsync(INeural neural)
     {
         var json = JsonConvert.SerializeObject(neural, Formatting.Indented);
 

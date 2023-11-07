@@ -2,9 +2,9 @@ using System;
 using UnityEngine;
 using Random = System.Random;
 
-public class NeuralNetwork
+public class NeuralNetwork : INeural
 {
-    public string Id { get; private set; }
+    public Guid Id { get; private set; }
 
     public int[] layerSizes;
     public double[][][] weights;
@@ -19,19 +19,21 @@ public class NeuralNetwork
     [NonSerialized]
     private readonly Random _random;
 
+    public double[] GetInputArray() => _activations[0];
+
     public NeuralNetwork(int[] layerSizes, Func<double, double>[] activationFunctions, int randomSeed)
     {
-        Id = Guid.NewGuid().ToString();
+        Id = Guid.NewGuid();
 
         this.layerSizes = layerSizes;
         this._activationFunctions = activationFunctions;
 
         _random = new Random(randomSeed);
 
-        InitializeParameters();
+        InitializeRandom();
     }
 
-    private void InitializeParameters()
+    public void InitializeRandom()
     {
         _activations = new double[layerSizes.Length][];
         weights = new double[layerSizes.Length - 1][][];
@@ -60,8 +62,10 @@ public class NeuralNetwork
         }
     }
 
-    public void Copy(NeuralNetwork parentNeural)
+    public void Copy(INeural neural)
     {
+        var parentNeural = (NeuralNetwork)neural;
+
         Id = parentNeural.Id;
 
         for (int i = 0; i < layerSizes.Length; i++)
@@ -83,7 +87,7 @@ public class NeuralNetwork
 
     public void Mutate(float mutationFactor)
     {
-        Id = Guid.NewGuid().ToString();
+        Id = Guid.NewGuid();
 
         for (int i = 0; i < layerSizes.Length; i++)
         {
@@ -102,9 +106,12 @@ public class NeuralNetwork
         }
     }
 
-    public void Breed(NeuralNetwork parentX, NeuralNetwork parentY)
+    public void Breed(INeural neuralX, INeural neuralY)
     {
-        Id = Guid.NewGuid().ToString();
+        Id = Guid.NewGuid();
+
+        var parentX = (NeuralNetwork)neuralX;
+        var parentY = (NeuralNetwork)neuralY;
 
         for (int i = 0; i < layerSizes.Length; i++)
         {
@@ -123,22 +130,17 @@ public class NeuralNetwork
         }
     }
 
-    public double Sigmoid(double x) => 1.0 / (1.0 + Math.Exp(-x));
-    public double Tanh(double x) => Math.Tanh(x);
-    public double ReLU(double x) => Math.Max(0, x);
+    private double Sigmoid(double x) => 1.0 / (1.0 + Math.Exp(-x));
+    private double Tanh(double x) => Math.Tanh(x);
+    private double ReLU(double x) => Math.Max(0, x);
 
     private double ApplyActivationFunction(double x, int layer)
     {
         if (layer == layerSizes.Length - 1)
             return x;
-        
+
         return ReLU(x);
         // return activationFunctions[layer](x);
-    }
-
-    public double[] GetInputArray()
-    {
-        return _activations[0];
     }
 
     public double[] FeedForward()
@@ -160,11 +162,5 @@ public class NeuralNetwork
         }
 
         return _activations[layerSizes.Length - 1]; // Return the output layer's activations
-    }
-
-    public void Train(double[] input, double[] target, double learningRate)
-    {
-        // Implement backpropagation to update weights and biases.
-        // This is a simplified example and should be replaced with a proper training algorithm.
     }
 }

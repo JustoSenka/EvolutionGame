@@ -103,7 +103,7 @@ public class Simulation
                 Position = Utils.CreateRandomPositionWithinRect(_settings.spawnArea, _random)
             };
 
-            s.InitializeRandomNaural(_random.Next());
+            s.InitializeRandomTrainedNaural(_random.Next());
         }
 
         for (int i = 0; i < _settings.initialFoodCount; i++)

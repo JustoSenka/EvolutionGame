@@ -227,24 +227,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c98a0e0a6c5f154e81db9b54133c623, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShouldRemoveSelf: 0
   Object:
     score: 0
-    neuralNetworkLayerSizes: 0100000001000000
     mutationFactor: 0.05
     consumeRadius: 0.2
-    moveSpeed: 0.2
+    baseMoveSpeed: 0
     health: 100
     energy: 100
     hunger: 100
+    maturity: 0
+    reproduction: 0
     maxHealth: 100
     maxEnergy: 100
     maxHunger: 100
+    maxMaturity: 0
+    maxReproduction: 0
     damage: 10
     defense: 1
+    maturityRate: 0
+    reproductionRate: 0
+    energyRegen: 5
+    reproductionCount: 0
     hungerCostToMove: 0.1
     hungerCostToStay: 0.02
-    energyRegen: 5
 --- !u!1001 &4220480816311848203
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Linq;
 using UnityEngine;
+using Random = System.Random;
 
 [Serializable]
 public class Specimen : Unit
 {
-    public NeuralNetwork Neural { get; private set; }
+    public INeural Neural { get; private set; }
 
     private int[] _neuralNetworkLayerSizes = new int[] { 1, 2 };
 
@@ -34,8 +35,10 @@ public class Specimen : Unit
     public float energyRegen = 5;
     public float reproductionCount = 5;
 
-    public float hungerCostToMove = 0.3f;
-    public float hungerCostToStay = 0.1f;
+    public float hungerCostToMove = 0.1f;
+    public float hungerCostToStay = 0.03f;
+
+    private Random _random;
 
     public Specimen(bool addToDatabase) : base(addToDatabase)
     {
@@ -44,26 +47,29 @@ public class Specimen : Unit
         hunger = maxHunger;
     }
 
-    public void InitializeRandomNaural(int randomSeed)
+    public void InitializeRandomTrainedNaural(int randomSeed)
     {
-        Neural = new NeuralNetwork(_neuralNetworkLayerSizes, null, randomSeed);
-    }
+        _random = new Random(randomSeed);
 
-    public void Copy(NeuralNetwork parentNeural)
-    {
-        InitializeRandomNaural(0);
-        Neural.Copy(parentNeural);
-    }
+        Neural = new Genome(1, 2, randomSeed);
+        Neural.InitializeRandom();
 
-    public void Mutate()
-    {
-        Neural.Mutate(mutationFactor);
-    }
+        if (Neural is NeuralNetwork neuralNetwork)
+        {
+            neuralNetwork.weights[0][0][0] = 1;
+            neuralNetwork.biases[0][0] = 0;
 
-    public void Breed(NeuralNetwork parentY, NeuralNetwork parentX)
-    {
-        InitializeRandomNaural(0);
-        Neural.Breed(parentY, parentX);
+            neuralNetwork.weights[0][1][0] = 0;
+            neuralNetwork.biases[0][1] = 1;
+        }
+        else if (Neural is Genome genome)
+        {
+            genome.Connections[0].SetWeight(1);
+            genome.Connections[1].SetWeight(0);
+            genome.Nodes[2].SetBias(1);
+        }
+
+        // Mutate();
     }
 
     public override void CustomUpdate(long frame)
@@ -72,7 +78,9 @@ public class Specimen : Unit
 
         var closestFood = FindClosesFood();
 
-        input[0] = closestFood == null ? 0 : Vector3.SignedAngle(closestFood.Position - Position, Vector3.right, Vector3.up) / 360f;
+        var angleToFood = closestFood == null ? 0 : Vector3.SignedAngle(closestFood.Position - Position, Vector3.right, Vector3.up) / 360f;
+
+        input[0] = angleToFood;
 
         var outputs = Neural.FeedForward();
 
@@ -98,7 +106,7 @@ public class Specimen : Unit
 
             score += food.quantity;
             hunger = Mathf.Clamp(hunger + food.quantity, 0, maxHunger);
-            reproduction = reproduction + reproductionRate * food.quantity * 100;
+            reproduction += reproductionRate * food.quantity;
         }
     }
 
@@ -111,8 +119,9 @@ public class Specimen : Unit
                 for (int i = 0; i < reproductionCount; i++)
                 {
                     var child = new Specimen(true);
-                    child.Copy(Neural);
-                    child.Mutate();
+                    child.InitializeRandomTrainedNaural(_random.Next());
+                    child.Neural.Copy(Neural);
+                    child.Neural.Mutate(child.mutationFactor);
                     child.Position = Position;
                 }
             });
@@ -126,7 +135,11 @@ public class Specimen : Unit
         maturity = Mathf.Clamp(maturity + maturityRate, 0, maxMaturity);
 
         if (hunger > maxHunger * 8 / 10)
-            reproduction = Mathf.Clamp(reproduction + reproductionRate * hunger / maxHunger, 0, maxReproduction);
+        {
+            reproduction += reproductionRate * (hunger - maxHunger / 2) / maxHunger;
+            if (reproduction < 0)
+                reproduction = 0;
+        }
 
         hunger = Mathf.Clamp(hunger - hungerCostToStay - hungerCostToMove * speed, 0, maxHunger);
         if (hunger <= 0)
@@ -154,20 +167,25 @@ public class Specimen : Unit
 
     public void CustomUpdateSimple()
     {
-        var specimenPosition = Position;
+        var input = Neural.GetInputArray();
 
-        var closestFood = Database.Instance.Food
-            .Where(food => food.Valid)
-            .OrderBy(food => Vector3.Distance(food.Position, specimenPosition))
-            .First();
+        var closestFood = FindClosesFood();
 
-        var targetPosition = closestFood.Position - specimenPosition;
+        input[0] = closestFood == null ? 0 : Vector3.SignedAngle(closestFood.Position - Position, Vector3.right, Vector3.up) / 360f;
+        var outputs = Neural.FeedForward();
+
+        var targetPosition = closestFood.Position - Position;
 
         var angle = Vector3.SignedAngle(targetPosition, Vector3.right, Vector3.up);
-        var rotation = Quaternion.AngleAxis(angle, Vector3.down);
-        var direction = rotation * Vector3.right;
+        var direction = Quaternion.AngleAxis(angle, Vector3.down) * Vector3.right;
 
-        Position += direction * baseMoveSpeed;
+        var angle2 = (float) outputs[0] * 360f;
+        var direction2 = Quaternion.AngleAxis(angle2, Vector3.down) * Vector3.right;
+        var movementSpeed = Mathf.Clamp01((float)outputs[1]);
+
+        Debug.Log($"FoodAngle: {input[0] * 360}, ManualAngle: {angle} NeuralAngle: {angle2}");
+
+        Position += direction2 * baseMoveSpeed;
 
         ConsumeFood(closestFood);
     }

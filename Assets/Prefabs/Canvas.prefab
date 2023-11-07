@@ -116,9 +116,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99140f1938924924091d0c1e0ee6ade3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FrameText: {fileID: 0}
-  GenerationText: {fileID: 0}
-  ScoreText: {fileID: 0}
+  FrameText: {fileID: 507291807188879901}
+  SpecimenText: {fileID: 507291805434024316}
+  ScoreText: {fileID: 507291806623834367}
 --- !u!1 &507291805434024290
 GameObject:
   m_ObjectHideFlags: 0
@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 507291805434024319}
   - component: {fileID: 507291805434024316}
   m_Layer: 5
-  m_Name: GenerationText
+  m_Name: SpecimenText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -198,7 +198,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Generation:'
+  m_Text: 'Specimen:'
 --- !u!1 &507291806623834365
 GameObject:
   m_ObjectHideFlags: 0

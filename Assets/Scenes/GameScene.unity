@@ -2414,7 +2414,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8470681426129161886, guid: 9ea2008163fa4814dad77211fa3354e3, type: 3}
       propertyPath: settings.initialSpecimenCount
-      value: 100
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8470681427364082349, guid: 9ea2008163fa4814dad77211fa3354e3, type: 3}
       propertyPath: m_RootOrder

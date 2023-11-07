@@ -81,7 +81,7 @@ public class DatabaseBehaviour : MonoBehaviour
             if (unit is Specimen specimen)
             {
                 Debug.Log($"Initializing NeuralNetwork for specimen: {specimen.Id}");
-                specimen.InitializeRandomNaural(_random.Next());
+                specimen.InitializeRandomTrainedNaural(_random.Next());
             }
 
             if (unit is Tree tree)

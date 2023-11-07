@@ -6,13 +6,13 @@ using UnityEngine.UI;
 public class UIController : MonoBehaviour
 {
     public Text FrameText;
-    public Text GenerationText;
+    public Text SpecimenText;
     public Text ScoreText;
 
     void Update()
     {
         FrameText.text = $"Frame: {Simulation.Instance.Frame}";
-        GenerationText.text = $"Generation: {"empty"}";
+        SpecimenText.text = $"Specimen: {Database.Instance.Specimen.Objects.Count}";
         
         // Doing this less rarely to not slow down performance
         if (Simulation.Instance.Frame % 20 == 0)
